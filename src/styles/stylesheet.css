@@ -297,9 +297,10 @@ h3 {
   pointer-events: auto;
 }
 
-/* While dragging, disable CSS transition so movement is instant */
+/* While dragging, disable CSS transitions and transform so movement is instant */
 .review-panel.dragging {
   transition: none;
+  transform: none;
 }
 
 .review-header {

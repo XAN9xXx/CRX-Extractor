@@ -358,21 +358,29 @@ reviewPanel.addEventListener('mousedown', (e) => {
   // Only drag from header area (not the close button, nor inner content)
   if (!e.target.closest('.review-header') || e.target.closest('.review-close')) return;
 
-  // Convert CSS top:50% to pixel value for clean dragging
+  // Capture visual position BEFORE any style mutations.
+  // .review-visible uses top:50% + translateY(-50%) to center;
+  // we must snapshot the actual pixel position before disabling the transform.
+  const initialRect = reviewPanel.getBoundingClientRect();
+
+  // Immediately disable CSS transitions and transform so position changes are instant
+  reviewPanel.classList.add('dragging');
+
+  // Convert CSS top:50% to pixel value using the pre-mutation snapshot
   const styleTop = reviewPanel.style.top;
   if (!styleTop || styleTop === '50%' || styleTop.endsWith('%')) {
-    const rect = reviewPanel.getBoundingClientRect();
-    reviewPanel.style.top = rect.top + 'px';
-    reviewPanel.style.transform = ''; // clear translateY(-50%)
+    reviewPanel.style.top = initialRect.top + 'px';
   }
+  // Override CSS translateY(-50%) so panel position is pure pixel-based
+  reviewPanel.style.transform = 'none';
 
+  // Now read the final rect for drag offset calculation
   const rect = reviewPanel.getBoundingClientRect();
   dragState = {
     offsetX: e.clientX - rect.left,
     offsetY: e.clientY - rect.top,
   };
 
-  reviewPanel.classList.add('dragging');
   e.preventDefault();
 });
 
@@ -467,22 +475,42 @@ function parseWithWorker(file) {
         { type: 'module' }
       );
 
-      worker.onmessage = (msg) => {
+      // Safety timeout: if Worker doesn't respond within 10s, fall back to main thread
+      let settled = false;
+      const workerTimeout = setTimeout(() => {
+        if (settled) return;
+        settled = true;
         worker.terminate();
-        if (msg.data.error) {
-          hideLoadingState(true);
-          showErrorMessage(msg.data.error);
-          return;
-        }
-        handleParsedZip(msg.data.zipArchiveBuffer, file).catch((err) => {
-          console.warn('handleParsedZip failed:', err);
+        parseOnMainThreadWithBuffer(buffer, file);
+      }, 10000);
+
+      const done = (fn) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(workerTimeout);
+        fn();
+      };
+
+      worker.onmessage = (msg) => {
+        done(() => {
+          worker.terminate();
+          if (msg.data.error) {
+            hideLoadingState(true);
+            showErrorMessage(msg.data.error);
+            return;
+          }
+          handleParsedZip(msg.data.zipArchiveBuffer, file).catch((err) => {
+            console.warn('handleParsedZip failed:', err);
+          });
         });
       };
 
       worker.onerror = () => {
-        worker.terminate();
-        // Worker failed — silently fall through to main thread
-        parseOnMainThreadWithBuffer(buffer, file);
+        done(() => {
+          worker.terminate();
+          // Worker failed — silently fall through to main thread
+          parseOnMainThreadWithBuffer(buffer, file);
+        });
       };
 
       worker.postMessage(buffer);

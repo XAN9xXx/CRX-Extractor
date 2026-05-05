@@ -11,9 +11,9 @@ import { CRXFileParser } from '../src/crx-parser.js';
  *   after:  zip archive
  */
 function buildCRXv3(zipContent = new Uint8Array([1, 2, 3, 4])) {
-  // "Cr24" in big-endian bytes (parser uses DataView.getUint32 default=BE)
+  // "Cr24" in big-endian bytes (ASCII string)
   const magic = new Uint8Array([0x43, 0x72, 0x32, 0x34]);
-  const version = new Uint8Array([0x00, 0x00, 0x00, 0x03]); // v3, BE
+  const version = new Uint8Array([0x03, 0x00, 0x00, 0x00]); // v3, LE
 
   // Minimal valid protobuf header that Chrome accepts (empty message)
   const protoHeader = new Uint8Array([0x00]); // just a 1-byte empty protobuf
@@ -51,7 +51,7 @@ function buildCRXv2(
   signature = new Uint8Array([8, 8, 8, 8]),
 ) {
   const magic = new Uint8Array([0x43, 0x72, 0x32, 0x34]);
-  const version = new Uint8Array([0x00, 0x00, 0x00, 0x02]);
+  const version = new Uint8Array([0x02, 0x00, 0x00, 0x00]); // v2, LE
 
   // CRX v2 uses little-endian for lengths
   const pkLen = new Uint8Array([publicKey.length, 0, 0, 0]);

@@ -13,20 +13,6 @@ export function formatUint32(uint) {
 }
 
 /**
- * Format uint32 as 4-char ASCII string using bit operations (for debug).
- * @param {number} uint
- * @returns {string}
- */
-export function formatCharString(uint) {
-  return String.fromCharCode(
-    (uint >>> 24) & 0xff,
-    (uint >>> 16) & 0xff,
-    (uint >>> 8) & 0xff,
-    uint & 0xff
-  );
-}
-
-/**
  * Parse a CRX file from a DataView.
  * Returns an object with the extracted ZIP buffer (and optionally public key
  * / signature for CRX v2), or an error object on failure.
@@ -48,10 +34,12 @@ export function parseCRX(dataView, arrayBuffer) {
     return { error: 'Invalid CRX file: magic number mismatch (got ' + formatUint32(magic) + ')' };
   }
 
-  const version = dataView.getUint32(4);
+  // Magic number is big-endian (ASCII "Cr24"), but version and all
+  // subsequent numeric fields are little-endian per CRX specification.
+  const version = dataView.getUint32(4, true);
 
   // ── CRX v2 format (with public key & signature headers) ─────────────────
-  if (version <= 2) {
+  if (version === 2) {
     const publicKeyLength = dataView.getUint32(8, true);
     const signatureLength = dataView.getUint32(12, true);
 
@@ -69,12 +57,16 @@ export function parseCRX(dataView, arrayBuffer) {
   }
 
   // ── CRX v3 format (with protobuf-style header) ──────────────────────────
-  const headerLength = dataView.getUint32(8, true);
+  if (version === 3) {
+    const headerLength = dataView.getUint32(8, true);
 
-  if (12 + headerLength > arrayBuffer.byteLength) {
-    return { error: 'Invalid CRX v3 file: headers exceed file size' };
+    if (12 + headerLength > arrayBuffer.byteLength) {
+      return { error: 'Invalid CRX v3 file: headers exceed file size' };
+    }
+
+    const zip = arrayBuffer.slice(12 + headerLength);
+    return { zip };
   }
 
-  const zip = arrayBuffer.slice(12 + headerLength);
-  return { zip };
+  return { error: 'Unsupported CRX version: ' + version + ' (only v2 and v3 are supported)' };
 }

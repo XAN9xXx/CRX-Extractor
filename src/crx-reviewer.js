@@ -403,7 +403,20 @@ export class CRXReviewer {
     }
 
     // 5c: Remote resource loading
-    const remoteScriptsMatch = allCode.match(/['"`]https?:\/\/[^'"`\s]+\.js['"`]/g);
+    // Filter out comment-only lines to reduce false positives from
+    // URLs that appear in documentation or commented-out code.
+    const RE_REMOTE_SCRIPT = /['"`]https?:\/\/[^'"`\s]+\.js['"`]/g;
+    const nonCommentLines = allCode
+      .split('\n')
+      .filter((line) => {
+        const trimmed = line.trim();
+        return trimmed
+          && !trimmed.startsWith('//')
+          && !trimmed.startsWith('/*')
+          && !trimmed.startsWith('*');
+      })
+      .join('\n');
+    const remoteScriptsMatch = nonCommentLines.match(RE_REMOTE_SCRIPT);
     if (remoteScriptsMatch) {
       const deduped = [...new Set(remoteScriptsMatch.map((s) => s.replace(/['"`]/g, '')))];
       for (const url of deduped.slice(0, 5)) { // limit to 5
