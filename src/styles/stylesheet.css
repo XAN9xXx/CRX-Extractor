@@ -1,0 +1,504 @@
+/*
+* CRX Extractor — Custom theme styles
+* normalize.css and skeleton.css are imported separately
+*/
+
+:root {
+  --color-primary: #3c63e3;
+  --color-primary-dark: #2b47a3;
+  --color-primary-light: #33c3f0;
+  --color-accent: #1eaedb;
+  --color-accent-hover: #0fa0ce;
+  --color-white: #fff;
+  --color-text: #222;
+  --color-text-secondary: #333;
+  --color-text-muted: #555;
+  --color-text-footer: #888;
+  --color-bg: #fff;
+  --color-bg-secondary: #eee;
+  --color-border: #bbb;
+  --color-border-light: #d1d1d1;
+  --color-border-lighter: #e1e1e1;
+  --color-code-bg: #f1f1f1;
+  --color-dropzone-text: rgba(255, 255, 255, 0.4);
+  --color-dropzone-hover: rgba(255, 255, 255, 0.8);
+  --color-dropzone-shadow: rgba(0, 0, 0, 0.44);
+  --spinner-border: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────────── */
+
+.tool-wrapper {
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.tool-wrapper > .container {
+  width: 100%;
+  position: relative;
+  top: 6.2vh;
+}
+
+.article-wrapper {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.article-wrapper > .container {
+  width: 100%;
+}
+
+.article {
+  padding-top: 2rem;
+}
+
+.download-section {
+  position: relative;
+  top: 5vh;
+}
+
+/* Flexbox layout */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────────────── */
+
+.center {
+  text-align: center;
+}
+
+h3 {
+  font-size: 3rem;
+}
+
+.crx-tool-row {
+  margin-left: calc(-100% * 3 / 34);
+  margin-right: calc(100% * 3 / 34);
+}
+
+.download-heading {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.download-section--offset {
+  margin-left: calc(4% - 100% * 1 / 34);
+}
+
+.footer-row {
+  padding-top: 3rem;
+}
+
+.footer-text {
+  font-size: 1.3rem;
+  color: var(--color-text-footer);
+}
+
+/* ── External link icon ────────────────────────────────────────────────────── */
+
+.ext-link-icon {
+  vertical-align: -0.125em;
+  margin-left: 0.15em;
+}
+
+/* ── Drop zone ─────────────────────────────────────────────────────────────── */
+
+#drop-zone {
+  color: var(--color-dropzone-text);
+  width: 25rem;
+  height: 20rem;
+  box-shadow: inset 7px 28px 51px -29px var(--color-dropzone-shadow);
+  border-radius: 4rem;
+  font-family: Arial;
+  position: relative;
+  background: var(--color-primary-dark);
+  margin: 0 auto;
+}
+
+#drop-zone p {
+  text-align: center;
+  top: 4rem;
+  left: 2rem;
+  width: 22rem;
+  font-size: 1.7rem;
+  position: absolute;
+}
+
+#drop-zone input {
+  position: absolute;
+  cursor: pointer;
+  font-size: 1.5rem;
+  left: 2rem;
+  top: 12rem;
+  width: 22rem;
+}
+
+#drop-zone.mouse-over {
+  border: 1px dashed var(--color-dropzone-hover);
+  color: var(--color-dropzone-hover);
+}
+
+#drop-zone .thanks {
+  color: var(--color-white);
+  font-size: 2.7rem;
+  position: absolute;
+  width: 25rem;
+  left: -0.5rem;
+  top: 2rem;
+  display: none;
+}
+
+#drop-zone .download-btn-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+#drop-zone .download-btn-wrapper .download {
+  pointer-events: auto;
+}
+
+#drop-zone .download-btn-wrapper .download-reset {
+  display: none;
+  pointer-events: auto;
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+#drop-zone .download-btn-wrapper .download-reset:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+#drop-zone.upload-disabled {
+  cursor: default;
+}
+
+#drop-zone.upload-disabled input[type="file"] {
+  pointer-events: none;
+}
+
+/* Initially hidden UI elements */
+#drop-zone .download,
+.download-crx,
+.download-crx-err,
+.download-source-err {
+  display: none;
+}
+
+.download-source-err {
+  padding-top: 1rem;
+  width: 25rem;
+  margin: 0 auto;
+}
+
+#crx-download-input {
+  color: #000;
+}
+
+/* ── Loading spinner ────────────────────────────────────────────────────────── */
+
+#drop-zone .loading-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-dropzone-hover);
+}
+
+#drop-zone .loading-wrapper p {
+  position: static;
+  width: auto;
+  font-size: 1.5rem;
+  margin-top: 0.3rem;
+}
+
+#drop-zone .loading-wrapper .spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--spinner-border);
+  border-top-color: var(--color-white);
+  border-radius: 50%;
+  animation: crx-spin 0.8s linear infinite;
+  margin-bottom: 1.2rem;
+}
+
+@keyframes crx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Review Panel (floating card) ──────────────────────────────────────────── */
+
+.review-panel {
+  display: none;
+  position: fixed;
+  z-index: 1010;
+  width: calc(100vw - 2rem);
+  max-width: 46rem;
+  max-height: 85vh;
+  background: var(--color-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.95);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.review-panel.review-visible {
+  display: flex;
+  flex-direction: column;
+  top: 50%;
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  pointer-events: auto;
+}
+
+/* While dragging, disable CSS transition so movement is instant */
+.review-panel.dragging {
+  transition: none;
+}
+
+.review-header {
+  padding: 1.4rem 1.6rem 1rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid var(--color-border-lighter);
+  position: relative;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.review-panel.dragging .review-header {
+  cursor: grabbing;
+}
+
+.review-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 2rem 0.6rem 0;
+  padding-right: 0;
+}
+
+/* Close button (×) */
+.review-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 1rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.review-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--color-text);
+}
+
+.review-score-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.review-score-icon {
+  font-size: 2.2rem;
+}
+
+.review-score {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.review-score::after {
+  content: '/100';
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.review-level {
+  margin-left: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.15rem 0.7rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.review-level.risk-low {
+  background: #d4edda;
+  color: #155724;
+}
+
+.review-level.risk-medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.review-level.risk-high {
+  background: #ffe5d0;
+  color: #c73e00;
+}
+
+.review-level.risk-critical {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Score color — applied via .review-score element class */
+.review-score.risk-low { color: #28a745; }
+.review-score.risk-medium { color: #e6a817; }
+.review-score.risk-high { color: #e8590c; }
+.review-score.risk-critical { color: #dc3545; }
+
+/* ── Review Stats ───────────────────────────────────────────────────────────── */
+
+.review-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 1rem 1.6rem;
+  background: #fafafa;
+  border-bottom: 1px solid var(--color-border-lighter);
+  flex-shrink: 0;
+}
+
+.review-stat {
+  font-size: 1.15rem;
+  color: var(--color-text-secondary);
+}
+
+.review-stat span {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ── Review Issues ──────────────────────────────────────────────────────────── */
+
+.review-issues {
+  padding: 0.8rem 1.6rem 1rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.review-issue {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  align-items: flex-start;
+}
+
+.review-issue:last-child {
+  border-bottom: none;
+}
+
+.review-issue-sev {
+  flex-shrink: 0;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  margin-top: 0.4rem;
+}
+
+.review-issue-sev.critical { background: #dc3545; }
+.review-issue-sev.high { background: #e8590c; }
+.review-issue-sev.medium { background: #e6a817; }
+.review-issue-sev.low { background: #6c757d; }
+
+.review-issue-detail {
+  flex: 1;
+  color: var(--color-text-secondary);
+}
+
+.review-issue-cat {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-right: 0.4rem;
+}
+
+/* ── Review Footer ──────────────────────────────────────────────────────────── */
+
+.review-footer {
+  padding: 0.8rem 1.6rem;
+  background: #f8f9fa;
+  border-top: 1px solid var(--color-border-lighter);
+  flex-shrink: 0;
+}
+
+.review-disclaimer {
+  font-size: 1.05rem;
+  color: var(--color-text-footer);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.review-empty {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+

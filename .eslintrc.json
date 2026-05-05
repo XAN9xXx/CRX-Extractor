@@ -1,0 +1,30 @@
+{
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true,
+    "worker": true
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "prefer-const": "warn",
+    "no-var": "error",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-throw-literal": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error"
+  },
+  "globals": {
+    "URL": "readonly",
+    "Blob": "readonly",
+    "FileReader": "readonly",
+    "DataView": "readonly"
+  }
+}
