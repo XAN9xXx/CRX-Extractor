@@ -1,5 +1,23 @@
-node_modules/*
-\.*
-tmp/*
-build/*
-s3/*
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Temp files
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code misc
+$null
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
